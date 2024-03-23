@@ -4,39 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83ee38da-833e-4167-92c8-05d34441c3de" name="Changes" comment="2024.12.3 11:49">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_23_2024_10_57_PM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_23_2024_10_57_PM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/tracnghiem.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Business/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Business/authenticate_bussiness.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Business/student_business.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Business/teacher_business.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataAccess/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataAccess/student_DA.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataAccess/teacher_DA.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/sqlachemy.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Router/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Router/auth_router.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Router/request_body_model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Router/response_model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Router/student_router.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Router/teacher_router.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Static/test.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_main.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-    </list>
+    <list default="true" id="83ee38da-833e-4167-92c8-05d34441c3de" name="Changes" comment="2024.12.3 11:49" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -201,7 +169,7 @@
       <workItem from="1710950626063" duration="3961000" />
       <workItem from="1711117922095" duration="1813000" />
       <workItem from="1711162654253" duration="8465000" />
-      <workItem from="1711190766464" duration="15241000" />
+      <workItem from="1711190766464" duration="15638000" />
     </task>
     <task id="LOCAL-00001" summary="2024.12.3 11:49">
       <option name="closed" value="true" />
