@@ -1,0 +1,788 @@
+Index: Model/Student.py
+===================================================================
+diff --git a/Model/Student.py b/Model/Student.py
+deleted file mode 100644
+--- a/Model/Student.py	(revision 3386f40ad5f28e59f9e6d8d51a493a3267373978)
++++ /dev/null	(revision 3386f40ad5f28e59f9e6d8d51a493a3267373978)
+@@ -1,11 +0,0 @@
+-from sqlalchemy import Column, Integer, String
+-
+-from Model import Base
+-class Student(Base):
+-    __tablename__ = "student"
+-
+-    id = Column(Integer, primary_key=True)
+-    name = Column(String)
+-    hash_pswd = Column(String)
+-    avatar_path = Column(String)
+-    email = Column(String)
+\ No newline at end of file
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from fastapi import FastAPI\r\nfrom fastapi.staticfiles import StaticFiles\r\n\r\napp = FastAPI()\r\napp.mount(\"/static\", StaticFiles(directory=\"Static\"), name=\"static\")\r\n\r\n\r\n@app.get(\"/\")\r\nasync def root():\r\n    return {\"message\": \"Hello World\"}\r\n\r\n\r\n@app.get(\"/hello/{name}\")\r\nasync def say_hello(name: str):\r\n    return {\"message\": f\"Hello {name}\"}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 3386f40ad5f28e59f9e6d8d51a493a3267373978)
++++ b/main.py	(date 1711206990879)
+@@ -1,15 +1,26 @@
++import fastapi.middleware.cors
++import uvicorn
+ from fastapi import FastAPI
+ from fastapi.staticfiles import StaticFiles
+ 
++from Router.auth_router import auth_router
++from Router.teacher_router import teacher_router
++from Router.student_router import student_router
++
+ app = FastAPI()
+ app.mount("/static", StaticFiles(directory="Static"), name="static")
+ 
++app.add_middleware(
++    fastapi.middleware.cors.CORSMiddleware,
++    allow_origins=["http://localhost:4444"],
++    allow_credentials=True,
++    allow_methods=["*"],
++    allow_headers=["*"],
++)
+ 
+-@app.get("/")
+-async def root():
+-    return {"message": "Hello World"}
++app.include_router(auth_router)
++app.include_router(teacher_router)
++app.include_router(student_router)
+ 
+-
+-@app.get("/hello/{name}")
+-async def say_hello(name: str):
+-    return {"message": f"Hello {name}"}
++if __name__ == "__main__":
++    uvicorn.run("main:app", host="0.0.0.0", port=4444)
+\ No newline at end of file
+Index: Router/teacher_router.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Router/teacher_router.py b/Router/teacher_router.py
+new file mode 100644
+--- /dev/null	(date 1711207406574)
++++ b/Router/teacher_router.py	(date 1711207406574)
+@@ -0,0 +1,25 @@
++from fastapi import APIRouter, HTTPException, Depends, Body
++from starlette import status
++from Model import Teacher
++from Business.authenticate_bussiness import get_current_user
++from typing import Annotated
++from Business.teacher_business import teacher_bussiness
++from .request_body_model import TeacherAccount
++
++teacher_router = APIRouter(prefix='/teacher', tags=['teacher'])
++
++
++@teacher_router.get('/', status_code=status.HTTP_200_OK)
++async def test(teacher: Annotated[Teacher, Depends(get_current_user)]):
++    if teacher is None:
++        raise HTTPException(status_code=404, detail='Authentication Failed')
++
++    return "Hello teacher: " + teacher.name
++
++
++@teacher_router.post('/sign_up', status_code=status.HTTP_201_CREATED)
++async def sign_up(data: Annotated[TeacherAccount, Body()], teacher_service: Annotated[teacher_bussiness, Depends()]):
++    try:
++        teacher_service.sign_up(email=data.email, password=data.password, name=data.name)
++    except:
++        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Email is already existed!")
+Index: Business/student_business.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Business/student_business.py b/Business/student_business.py
+new file mode 100644
+--- /dev/null	(date 1711206825058)
++++ b/Business/student_business.py	(date 1711206825058)
+@@ -0,0 +1,27 @@
++from Model import Student
++from DataAccess.student_DA import student_DA
++from . import bcrypt_context
++
++
++class student_bussiness:
++    def __init__(self):
++        self.student_DA = student_DA()
++
++    def authenticate(self, username, password) -> Student | None:
++        student = self.student_DA.get_student_by_email(email=username)
++        if student:
++            if bcrypt_context.verify(password, student.hash_pswd):
++                return student
++
++        return None
++
++    def authenticate_token(self, token):
++        student = self.student_DA.get_student_by_id(id=token.get("id"))
++        if student:
++            if token.get("hash_pswd") == student.hash_pswd:
++                return student
++
++        return None
++
++    def sign_up(self, email: str, password: str, name: str):
++        self.student_DA.insert_student(email=email, hash_pswd=bcrypt_context.hash(password), name=name)
+\ No newline at end of file
+Index: .idea/sqldialects.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/sqldialects.xml b/.idea/sqldialects.xml
+new file mode 100644
+--- /dev/null	(date 1711163313335)
++++ b/.idea/sqldialects.xml	(date 1711163313335)
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="SqlDialectMappings">
++    <file url="file://$PROJECT_DIR$/main.py" dialect="GenericSQL" />
++    <file url="PROJECT" dialect="TSQL" />
++  </component>
++</project>
+\ No newline at end of file
+Index: DataAccess/student_DA.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/DataAccess/student_DA.py b/DataAccess/student_DA.py
+new file mode 100644
+--- /dev/null	(date 1711206848646)
++++ b/DataAccess/student_DA.py	(date 1711206848646)
+@@ -0,0 +1,24 @@
++from . import get_database
++from Model import Student
++
++
++class student_DA:
++    def get_student_by_email(self, email: str) -> Student | None:
++        with get_database(True) as cursor:
++            cursor.execute("SELECT * FROM [student] WHERE [email]=%s", (email,))
++            row = cursor.fetchone()
++            if row is not None:
++                return Student(row)
++            return None
++
++    def get_student_by_id(self, id: str) -> Student | None:
++        with get_database(True) as cursor:
++            cursor.execute("SELECT * FROM [student] WHERE [id]=%s", (id,))
++            row = cursor.fetchone()
++            if row is not None:
++                return Student(row)
++            return None
++
++    def insert_student(self, email: str, hash_pswd: str, name: str):
++        with get_database(True) as cursor:
++            cursor.execute("INSERT INTO [student]([email], [hash_pswd], [name])  VALUES (%s, %s, %s)", (email, hash_pswd, name))
+Index: Router/student_router.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Router/student_router.py b/Router/student_router.py
+new file mode 100644
+--- /dev/null	(date 1711207414812)
++++ b/Router/student_router.py	(date 1711207414812)
+@@ -0,0 +1,25 @@
++from fastapi import APIRouter, HTTPException, Depends, Body
++from starlette import status
++from Model import Teacher
++from Business.authenticate_bussiness import get_current_user
++from typing import Annotated
++from Business.student_business import student_bussiness
++from .request_body_model import StudentAccount
++
++student_router = APIRouter(prefix='/student', tags=['student'])
++
++
++@student_router.get('/', status_code=status.HTTP_200_OK)
++async def test(student: Annotated[Teacher, Depends(get_current_user)]):
++    if student is None:
++        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Authentication Failed')
++
++    return "Hello student: " + student.name
++
++
++@student_router.post('/sign_up', status_code=status.HTTP_201_CREATED)
++async def sign_up(data: Annotated[StudentAccount, Body()], student_service: Annotated[student_bussiness, Depends()]):
++    try:
++        student_service.sign_up(email=data.email, password=data.password, name=data.name)
++    except:
++        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Email is already existed!")
+Index: Router/request_body_model.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Router/request_body_model.py b/Router/request_body_model.py
+new file mode 100644
+--- /dev/null	(date 1711205445325)
++++ b/Router/request_body_model.py	(date 1711205445325)
+@@ -0,0 +1,11 @@
++from pydantic import BaseModel, EmailStr, Field
++
++class TeacherAccount(BaseModel):
++    name: str = Field(..., max_length=100)
++    email: EmailStr
++    password: str = Field(min_length=8, max_length=64)
++
++class StudentAccount(BaseModel):
++    name: str = Field(max_length=100)
++    email: EmailStr
++    password: str = Field(min_length=8, max_length=64)
+\ No newline at end of file
+Index: Router/auth_router.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Router/auth_router.py b/Router/auth_router.py
+new file mode 100644
+--- /dev/null	(date 1711206749099)
++++ b/Router/auth_router.py	(date 1711206749099)
+@@ -0,0 +1,52 @@
++from typing import Annotated
++from fastapi import APIRouter, Depends, HTTPException
++from fastapi.security import OAuth2PasswordRequestForm
++from starlette import status
++from Business.authenticate_bussiness import create_access_token
++from Business.teacher_business import teacher_bussiness
++from Business.student_business import student_bussiness
++from .response_model import Token
++from Model import Teacher, Student
++
++auth_router = APIRouter(prefix='/auth', tags=['auth'])
++
++
++@auth_router.post("/token")
++async def get_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], role: str) -> Token:
++    if role == "teacher":
++        teacher_service = teacher_bussiness()
++        teacher: Teacher = teacher_service.authenticate(form_data.username, form_data.password)
++        if not teacher:
++            raise HTTPException(
++                status_code=status.HTTP_401_UNAUTHORIZED,
++                detail="Incorrect username or password",
++                headers={"WWW-Authenticate": "Bearer"},
++            )
++
++        token = create_access_token(
++            {"id": teacher.id, "email": teacher.email, "hash_pswd": teacher.hash_pswd, "role": role})
++
++        return Token(**{"access_token": token, "token_type": 'bearer'})
++
++    if role == "student":
++        student_service = student_bussiness()
++        student: Student = student_service.authenticate(form_data.username, form_data.password)
++        if not student:
++            raise HTTPException(
++                status_code=status.HTTP_401_UNAUTHORIZED,
++                detail="Incorrect username or password",
++                headers={"WWW-Authenticate": "Bearer"},
++            )
++
++        token = create_access_token(
++            {"id": student.id, "email": student.email, "hash_pswd": student.hash_pswd, "role": role})
++
++        return Token(**{"access_token": token, "token_type": 'bearer'})
++
++    if role == "admin":
++        pass
++
++    raise HTTPException(
++        status_code=status.HTTP_404_NOT_FOUND,
++        detail="Need role: ['teacher', 'student', 'admin']",
++    )
+Index: Business/authenticate_bussiness.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Business/authenticate_bussiness.py b/Business/authenticate_bussiness.py
+new file mode 100644
+--- /dev/null	(date 1711205922182)
++++ b/Business/authenticate_bussiness.py	(date 1711205922182)
+@@ -0,0 +1,46 @@
++import starlette.status
++from jose import jwt
++from datetime import datetime, timedelta
++import jose
++import typing
++import fastapi
++from . import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, HASH_ALGORITHM, oauth2_scheme
++from Business.teacher_business import teacher_bussiness
++from Business.student_business import student_bussiness
++
++
++def create_access_token(data: dict, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
++    encode = data.copy()
++    expires = datetime.utcnow() + expires_delta
++    encode.update({'exp': expires})
++    return jwt.encode(encode, SECRET_KEY, algorithm=HASH_ALGORITHM)
++
++
++async def get_current_user(token: typing.Annotated[str, fastapi.Depends(oauth2_scheme)]):
++    credentials_exception = fastapi.HTTPException(
++        status_code=starlette.status.HTTP_401_UNAUTHORIZED,
++        detail="Could not validate credentials",
++        headers={"WWW-Authenticate": "Bearer"},
++    )
++    try:
++        payload = jwt.decode(token, SECRET_KEY, algorithms=[HASH_ALGORITHM])
++        role = payload.get("role")
++        if role == "teacher":
++            teacher_service = teacher_bussiness()
++            teacher = teacher_service.authenticate_token(payload)
++            if teacher is None:
++                raise credentials_exception
++            return teacher
++        elif role == "student":
++            student_service = student_bussiness()
++            student = student_service.authenticate_token(payload)
++            if student is None:
++                raise credentials_exception
++            return student
++        elif role == "admin":
++            pass
++        else:
++            raise credentials_exception
++
++    except jose.JWTError:
++        raise credentials_exception
+Index: Router/response_model.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Router/response_model.py b/Router/response_model.py
+new file mode 100644
+--- /dev/null	(date 1711203823588)
++++ b/Router/response_model.py	(date 1711203823588)
+@@ -0,0 +1,7 @@
++from pydantic import BaseModel
++
++class Token(BaseModel):
++    access_token: str
++    token_type: str
++
++
+Index: Business/teacher_business.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Business/teacher_business.py b/Business/teacher_business.py
+new file mode 100644
+--- /dev/null	(date 1711206320529)
++++ b/Business/teacher_business.py	(date 1711206320529)
+@@ -0,0 +1,27 @@
++from Model import Teacher
++from DataAccess.teacher_DA import teacher_DA
++from . import bcrypt_context
++
++
++class teacher_bussiness:
++    def __init__(self):
++        self.teacher_DA = teacher_DA()
++
++    def authenticate(self, username, password) -> Teacher | None:
++        teacher = self.teacher_DA.get_teacher_by_email(email=username)
++        if teacher:
++            if bcrypt_context.verify(password, teacher.hash_pswd):
++                return teacher
++
++        return None
++
++    def authenticate_token(self, token: dict) -> Teacher | None:
++        teacher = self.teacher_DA.get_teacher_by_id(id=token.get("id"))
++        if teacher:
++            if token.get("hash_pswd") == teacher.hash_pswd:
++                return teacher
++
++        return None
++
++    def sign_up(self, email: str, password: str, name: str):
++        self.teacher_DA.insert_teacher(email=email, hash_pswd=bcrypt_context.hash(password), name=name)
+\ No newline at end of file
+Index: DataAccess/teacher_DA.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/DataAccess/teacher_DA.py b/DataAccess/teacher_DA.py
+new file mode 100644
+--- /dev/null	(date 1711206883145)
++++ b/DataAccess/teacher_DA.py	(date 1711206883145)
+@@ -0,0 +1,25 @@
++from . import get_database
++from Model import Teacher
++
++
++class teacher_DA:
++    def get_teacher_by_email(self, email: str) -> Teacher | None:
++        with get_database(True) as cursor:
++            cursor.execute("SELECT * FROM [teacher] WHERE [email]=%s", (email,))
++            row = cursor.fetchone()
++            if row is not None:
++                return Teacher(row)
++            return None
++
++    def get_teacher_by_id(self, id: str) -> Teacher | None:
++        with get_database(True) as cursor:
++            cursor.execute("SELECT * FROM [teacher] WHERE [id]=%s", (id,))
++            row = cursor.fetchone()
++            if row is not None:
++                return Teacher(row)
++            return None
++
++    def insert_teacher(self, email: str, hash_pswd: str, name: str):
++        with get_database(True) as cursor:
++            cursor.execute("INSERT INTO [teacher]([email], [hash_pswd], [name])  VALUES (%s, %s, %s)", (email, hash_pswd, name))
++
+Index: DataAccess/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/DataAccess/__init__.py b/DataAccess/__init__.py
+new file mode 100644
+--- /dev/null	(date 1711173683124)
++++ b/DataAccess/__init__.py	(date 1711173683124)
+@@ -0,0 +1,23 @@
++from contextlib import contextmanager
++import pymssql
++import traceback
++
++MSSQL_SERVER = "localhost"
++MSSQL_DATABASE = "trac_nghiem"
++MSSQL_PORT = "1433"
++
++
++@contextmanager
++def get_database(as_dict=True):
++    mssql_connection = pymssql.connect(server=MSSQL_SERVER, database=MSSQL_DATABASE, port=MSSQL_PORT, as_dict=as_dict)
++    cursor = mssql_connection.cursor()
++
++    try:
++        yield cursor
++        mssql_connection.commit()
++    except pymssql.Error:
++        traceback.print_exc()
++        mssql_connection.rollback()
++        raise
++    finally:
++        mssql_connection.close()
+Index: test.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/test.py b/test.py
+new file mode 100644
+--- /dev/null	(date 1711172663586)
++++ b/test.py	(date 1711172663586)
+@@ -0,0 +1,15 @@
++from contextlib import contextmanager
++import pymssql
++import traceback
++
++MSSQL_SERVER = "localhost"
++MSSQL_DATABASE = "trac_nghiem"
++MSSQL_PORT = "1433"
++
++
++mssql_connection = pymssql.connect(server=MSSQL_SERVER, database=MSSQL_DATABASE, port=MSSQL_PORT, as_dict=True)
++cursor = mssql_connection.cursor()
++
++cursor.execute("SELECT * FROM teacher")
++
++print(cursor.fetchone())
+\ No newline at end of file
+Index: Router/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Router/__init__.py b/Router/__init__.py
+new file mode 100644
+--- /dev/null	(date 1711205922177)
++++ b/Router/__init__.py	(date 1711205922177)
+@@ -0,0 +1,1 @@
++
+Index: Model/sqlachemy.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Model/sqlachemy.txt b/Model/sqlachemy.txt
+new file mode 100644
+--- /dev/null	(date 1710953574373)
++++ b/Model/sqlachemy.txt	(date 1710953574373)
+@@ -0,0 +1,129 @@
++from sqlalchemy import create_engine
++from sqlalchemy.ext.declarative import declarative_base
++from sqlalchemy.orm import sessionmaker
++from sqlalchemy.engine import URL
++
++# Use the connection string for SQL Server
++# SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://@localhost:1433/trac_nghiem?driver=ODBC+Driver+17+for+SQL+Server"
++SQLALCHEMY_DATABASE_URL = URL.create(
++    drivername="mssql+pyodbc",
++    host="localhost",
++    port=1433,
++    database="trac_nghiem",
++    query={
++        "driver": "ODBC Driver 18 for SQL Server",
++        "TrustServerCertificate": "yes",
++        "authentication": "ActiveDirectoryIntegrated",
++    },
++)
++
++engine = create_engine(SQLALCHEMY_DATABASE_URL)
++SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
++
++Base = declarative_base()
++#
++# MODEL
++#
++from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean, func
++from sqlalchemy.orm import relationship
++from sqlalchemy.types import NVARCHAR
++
++
++class Admin(Base):
++    __tablename__ = "admin"
++
++    email = Column(String, primary_key=True, index=True)
++    hash_pswd = Column(String(255))
++    name = Column(NVARCHAR(100))
++    is_banned = Column(Boolean, default=False)
++
++class Report(Base):
++    __tablename__ = "report"
++
++    id = Column(Integer, primary_key=True, index=True)
++    title = Column(NVARCHAR(None))
++    content = Column(NVARCHAR(None))
++    student_id = Column(Integer, ForeignKey("student.id"))
++
++
++class Student(Base):
++    __tablename__ = "student"
++
++    id = Column(Integer, primary_key=True, index=True)
++    email = Column(String, unique=True, nullable=False, index=True)
++    name = Column(NVARCHAR(100))
++    hash_pswd = Column(String(255))
++    avatar_path = Column(String(255))
++    is_banned = Column(Boolean, default=False)
++
++
++class Teacher(Base):
++    __tablename__ = "teacher"
++
++    id = Column(Integer, primary_key=True, index=True)
++    email = Column(String, unique=True, nullable=False, index=True)
++    name = Column(NVARCHAR(100))
++    hash_pswd = Column(String(255))
++    avatar_path = Column(String(255))
++    is_banned = Column(Boolean, default=False)
++
++
++class Group(Base):
++    __tablename__ = "group"
++
++    id = Column(Integer, primary_key=True, index=True)
++    name = Column(NVARCHAR(100))
++    teacher_id = Column(Integer, ForeignKey('teacher.id'), nullable=False)
++    created_timestamp = Column(DateTime, default=func.now())
++    is_show = Column(Boolean, default=True)
++
++
++class GroupStudent(Base):
++    __tablename__ = "group_student"
++
++    group_id = Column(Integer, ForeignKey('group.id'), primary_key=True)
++    student_id = Column(Integer, ForeignKey('student.id'), primary_key=True)
++    is_join = Column(Boolean, default=True)
++
++
++class GroupTest(Base):
++    __tablename__ = "group_test"
++
++    id = Column(Integer, primary_key=True, index=True)
++    group_id = Column(Integer, ForeignKey('group.id'), nullable=False)
++    test_path = Column(String(500))
++    start = Column(DateTime)
++    end = Column(DateTime)
++    created_timestamp = Column(DateTime, default=func.now())
++
++
++class Collection(Base):
++    __tablename__ = "collection"
++
++    id = Column(Integer, primary_key=True, index=True)
++    teacher_id = Column(Integer, ForeignKey('teacher.id'), nullable=False)
++    name = Column(NVARCHAR(100))
++
++
++class QuestionBank(Base):
++    __tablename__ = "question_bank"
++
++    id = Column(Integer, primary_key=True, index=True)
++    collection_id = Column(Integer, ForeignKey('collection.id'), nullable=False)
++    name = Column(NVARCHAR(100))
++
++
++class GenerateTest(Base):
++    __tablename__ = "generate_test"
++
++    id = Column(Integer, primary_key=True, index=True)
++    collection_id = Column(Integer, ForeignKey('collection.id'), nullable=False)
++    name = Column(NVARCHAR(100))
++
++
++class ManualTest(Base):
++    __tablename__ = "manual_test"
++
++    id = Column(Integer, primary_key=True, index=True)
++    collection_id = Column(Integer, ForeignKey('collection.id'), nullable=False)
++    name = Column(NVARCHAR(100))
+Index: Business/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Business/__init__.py b/Business/__init__.py
+new file mode 100644
+--- /dev/null	(date 1711205922191)
++++ b/Business/__init__.py	(date 1711205922191)
+@@ -0,0 +1,10 @@
++from fastapi.security import OAuth2PasswordBearer
++from passlib.context import CryptContext
++
++
++SECRET_KEY = "197b2c37c391bed93fe80344fe73b806947a65e36206e05a1a23c2fa12702fe3"
++HASH_ALGORITHM = "HS256"
++ACCESS_TOKEN_EXPIRE_MINUTES = 30
++
++bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
++oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
+\ No newline at end of file
+Index: Model/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from sqlalchemy import create_engine\r\nfrom sqlalchemy.ext.declarative import declarative_base\r\nfrom sqlalchemy.orm import sessionmaker\r\nfrom sqlalchemy.engine import URL\r\n\r\n# Use the connection string for SQL Server\r\n# SQLALCHEMY_DATABASE_URL = \"mssql+pyodbc://@localhost:1433/trac_nghiem?driver=ODBC+Driver+17+for+SQL+Server\"\r\nSQLALCHEMY_DATABASE_URL = URL.create(\r\n    drivername=\"mssql+pyodbc\",\r\n    host=\"localhost\",\r\n    port=1433,\r\n    database=\"trac_nghiem\",\r\n    query={\r\n        \"driver\": \"ODBC Driver 18 for SQL Server\",\r\n        \"TrustServerCertificate\": \"yes\",\r\n        \"authentication\": \"ActiveDirectoryIntegrated\",\r\n    },\r\n)\r\n\r\nengine = create_engine(SQLALCHEMY_DATABASE_URL)\r\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\r\n\r\nBase = declarative_base()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Model/__init__.py b/Model/__init__.py
+--- a/Model/__init__.py	(revision 3386f40ad5f28e59f9e6d8d51a493a3267373978)
++++ b/Model/__init__.py	(date 1711168974828)
+@@ -1,23 +1,72 @@
+-from sqlalchemy import create_engine
+-from sqlalchemy.ext.declarative import declarative_base
+-from sqlalchemy.orm import sessionmaker
+-from sqlalchemy.engine import URL
++class Admin:
++    def __init__(self, data: dict) -> None:
++        self.id = data.get("id")
++        self.username = data.get("username")
++        self.hash_pswd = data.get("hash_pswd")
++        self.name = data.get("name")
++        self.is_banned = data.get("is_banned")
++
++class Student:
++    def __init__(self, data: dict) -> None:
++        self.id = data.get("id")
++        self.email = data.get("email")
++        self.hash_pswd = data.get("hash_pswd")
++        self.name = data.get("name")
++        self.avatar_path = data.get("avatar_path")
++        self.is_banned = data.get("is_banned")
++
++class Teacher:
++    def __init__(self, data: dict) -> None:
++        self.id = data.get("id")
++        self.email = data.get("email")
++        self.hash_pswd = data.get("hash_pswd")
++        self.name = data.get("name")
++        self.avatar_path = data.get("avatar_path")
++        self.is_banned = data.get("is_banned")
++
++class Group:
++    def __init__(self, data: dict) -> None:
++        self.id = data.get("id")
++        self.name = data.get("name")
++        self.teacher_id = data.get("teacher_id")
++        self.created_timestamp = data.get("created_timestamp")
++        self.is_show = data.get("is_show")
++
++class GroupStudent:
++    def __init__(self, data: dict) -> None:
++        self.group_id = data.get("group_id")
++        self.student_id = data.get("student_id")
++        self.is_join = data.get("is_join")
+ 
+-# Use the connection string for SQL Server
+-# SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://@localhost:1433/trac_nghiem?driver=ODBC+Driver+17+for+SQL+Server"
+-SQLALCHEMY_DATABASE_URL = URL.create(
+-    drivername="mssql+pyodbc",
+-    host="localhost",
+-    port=1433,
+-    database="trac_nghiem",
+-    query={
+-        "driver": "ODBC Driver 18 for SQL Server",
+-        "TrustServerCertificate": "yes",
+-        "authentication": "ActiveDirectoryIntegrated",
+-    },
+-)
++class GroupTest:
++    def __init__(self, data: dict) -> None:
++        self.id = data.get("id")
++        self.group_id = data.get("group_id")
++        self.test_path = data.get("test_path")
++        self.start = data.get("start")
++        self.end = data.get("end")
++        self.created_timestamp = data.get("created_timestamp")
+ 
+-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
++class Collection:
++    def __init__(self, data: dict) -> None:
++        self.id = data.get("id")
++        self.teacher_id = data.get("teacher_id")
++        self.name = data.get("name")
+ 
+-Base = declarative_base()
++class QuestionBank:
++    def __init__(self, data: dict) -> None:
++        self.id = data.get("id")
++        self.collection_id = data.get("collection_id")
++        self.name = data.get("name")
++
++class GenerateTest:
++    def __init__(self, data: dict) -> None:
++        self.id = data.get("id")
++        self.collection_id = data.get("collection_id")
++        self.name = data.get("name")
++
++class ManualTest:
++    def __init__(self, data: dict) -> None:
++        self.id = data.get("id")
++        self.collection_id = data.get("collection_id")
++        self.name = data.get("name")
+\ No newline at end of file
