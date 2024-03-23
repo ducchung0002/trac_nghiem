@@ -1,12 +1,11 @@
 import starlette.status
-from jose import jwt
-from datetime import datetime, timedelta
-import jose
 import typing
 import fastapi
-from . import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, HASH_ALGORITHM, oauth2_scheme
+from jose import jwt, JWTError
+from datetime import datetime, timedelta
 from Business.teacher_business import teacher_bussiness
 from Business.student_business import student_bussiness
+from . import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, HASH_ALGORITHM, oauth2_scheme
 
 
 def create_access_token(data: dict, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
@@ -42,5 +41,5 @@ async def get_current_user(token: typing.Annotated[str, fastapi.Depends(oauth2_s
         else:
             raise credentials_exception
 
-    except jose.JWTError:
+    except JWTError:
         raise credentials_exception
