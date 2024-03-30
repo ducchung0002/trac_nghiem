@@ -23,3 +23,4 @@ async def sign_up(data: Annotated[StudentAccount, Body()], student_service: Anno
         student_service.sign_up(email=data.email, password=data.password, name=data.name)
     except:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Email is already existed!")
+
