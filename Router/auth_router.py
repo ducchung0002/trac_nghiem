@@ -23,8 +23,7 @@ async def get_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        token = create_access_token(
-            {"id": teacher.id, "email": teacher.email, "hash_pswd": teacher.hash_pswd, "role": role})
+        token = create_access_token({"id": teacher.id, "email": teacher.email, "role": role})
 
         return Token(**{"access_token": token, "token_type": 'bearer'})
 
@@ -38,8 +37,7 @@ async def get_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        token = create_access_token(
-            {"id": student.id, "email": student.email, "hash_pswd": student.hash_pswd, "role": role})
+        token = create_access_token({"id": student.id, "email": student.email, "role": role})
 
         return Token(**{"access_token": token, "token_type": 'bearer'})
 

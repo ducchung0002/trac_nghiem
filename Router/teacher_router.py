@@ -5,16 +5,17 @@ from Business.authenticate_bussiness import get_current_user
 from typing import Annotated
 from Business.teacher_business import teacher_bussiness
 from .request_body_model import TeacherAccount
+from .response_model import RM_Teacher
 
 teacher_router = APIRouter(prefix='/teacher', tags=['teacher'])
 
 
 @teacher_router.get('/', status_code=status.HTTP_200_OK)
-async def test(teacher: Annotated[Teacher, Depends(get_current_user)]):
+async def get_teacher(teacher: Annotated[Teacher, Depends(get_current_user)]):
     if teacher is None or not isinstance(teacher, Teacher):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Authentication Failed')
 
-    return "Hello teacher: " + teacher.name
+    return RM_Teacher(**teacher_bussiness().get_teacher_by_id(teacher.id).__dict__)
 
 
 @teacher_router.post('/sign_up', status_code=status.HTTP_201_CREATED)

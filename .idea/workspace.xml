@@ -4,9 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83ee38da-833e-4167-92c8-05d34441c3de" name="Changes" comment="2024.23.3 23:49">
+    <list default="true" id="83ee38da-833e-4167-92c8-05d34441c3de" name="Changes" comment="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;Router/student_router.py">
+      <change beforePath="$PROJECT_DIR$/.idea/tracnghiem.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tracnghiem.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Business/authenticate_bussiness.py" beforeDir="false" afterPath="$PROJECT_DIR$/Business/authenticate_bussiness.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Business/student_business.py" beforeDir="false" afterPath="$PROJECT_DIR$/Business/student_business.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Business/teacher_business.py" beforeDir="false" afterPath="$PROJECT_DIR$/Business/teacher_business.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Router/auth_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/Router/auth_router.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Router/response_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Router/response_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Router/student_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/Router/student_router.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Router/teacher_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/Router/teacher_router.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +44,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -160,7 +168,8 @@
       <workItem from="1711117922095" duration="1813000" />
       <workItem from="1711162654253" duration="8465000" />
       <workItem from="1711190766464" duration="15638000" />
-      <workItem from="1711787386303" duration="673000" />
+      <workItem from="1711787386303" duration="867000" />
+      <workItem from="1711807213071" duration="8218000" />
     </task>
     <task id="LOCAL-00001" summary="2024.12.3 11:49">
       <option name="closed" value="true" />
@@ -202,15 +211,45 @@
       <option name="project" value="LOCAL" />
       <updated>1711213235479</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="2024.23.3 23:49">
+      <option name="closed" value="true" />
+      <created>1711806698333</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1711806698334</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="58be53b9-0737-400b-bf13-b620a84b7b10" value="TOOL_WINDOW" />
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
+        <entry key="58be53b9-0737-400b-bf13-b620a84b7b10">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="range">
+                    <value>
+                      <list>
+                        <option value="7ff65b43bf8d27811fa192a94f7257163dcfc311..b2b0fbe090485cfb2dc60ecb94c6c67a1cfa9a8e" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State />
@@ -222,7 +261,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="2024.12.3 11:49" />
     <MESSAGE value="2024.23.3 23:49" />
-    <option name="LAST_COMMIT_MESSAGE" value="2024.23.3 23:49" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;Router/student_router.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;Router/student_router.py" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

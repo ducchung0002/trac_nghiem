@@ -7,7 +7,7 @@ class student_bussiness:
     def __init__(self):
         self.student_DA = student_DA()
 
-    def authenticate(self, username, password) -> Student | None:
+    def authenticate(self, username: str, password: str) -> Student | None:
         student = self.student_DA.get_student_by_email(email=username)
         if student:
             if bcrypt_context.verify(password, student.hash_pswd):
@@ -15,13 +15,15 @@ class student_bussiness:
 
         return None
 
-    def authenticate_token(self, token):
-        student = self.student_DA.get_student_by_id(id=token.get("id"))
-        if student:
-            if token.get("hash_pswd") == student.hash_pswd:
-                return student
+    # def authenticate_token(self, token: dict) -> Student | None:
+    #     student = self.student_DA.get_student_by_id(id=token.get("id"))
+    #     if student:
+    #         if token.get("hash_pswd") == student.hash_pswd:
+    #             return student
+    #     return None
 
-        return None
-
-    def sign_up(self, email: str, password: str, name: str):
+    def sign_up(self, email: str, password: str, name: str) -> None:
         self.student_DA.insert_student(email=email, hash_pswd=bcrypt_context.hash(password), name=name)
+
+    def get_student_by_id(self, id: str) -> Student | None:
+        return self.student_DA.get_student_by_id(id=id)

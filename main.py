@@ -1,5 +1,4 @@
 import fastapi.middleware.cors
-import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
@@ -22,5 +21,7 @@ app.include_router(auth_router)
 app.include_router(teacher_router)
 app.include_router(student_router)
 
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=4444)
+import logging
+logging.getLogger('passlib').setLevel(logging.ERROR)
+
+# hypercorn main:app --worker-class trio --workers 4 --bind localhost:4444
