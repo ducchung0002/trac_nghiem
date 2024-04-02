@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83ee38da-833e-4167-92c8-05d34441c3de" name="Changes" comment="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;Router/student_router.py">
-      <change afterPath="$PROJECT_DIR$/Business/collection_business.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataAccess/collection_DA.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/request_model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Router/collection_router.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/trac_ngiem.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/trac_ngiem.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Business/authenticate_bussiness.py" beforeDir="false" afterPath="$PROJECT_DIR$/Business/authenticate_bussiness.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Business/student_business.py" beforeDir="false" afterPath="$PROJECT_DIR$/Business/student_business.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Business/teacher_business.py" beforeDir="false" afterPath="$PROJECT_DIR$/Business/teacher_business.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccess/student_DA.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccess/student_DA.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccess/teacher_DA.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccess/teacher_DA.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/db_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Router/auth_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/Router/auth_router.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Router/request_body_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Router/response_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/response_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Router/student_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/Router/student_router.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Router/teacher_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/Router/teacher_router.py" afterDir="false" />
-    </list>
+    <list default="true" id="83ee38da-833e-4167-92c8-05d34441c3de" name="Changes" comment="Merge remote-tracking branch 'origin/main'" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -181,7 +163,7 @@
       <workItem from="1711190766464" duration="15638000" />
       <workItem from="1711787386303" duration="867000" />
       <workItem from="1711807213071" duration="8987000" />
-      <workItem from="1712053314596" duration="10479000" />
+      <workItem from="1712053314596" duration="10811000" />
     </task>
     <task id="LOCAL-00001" summary="2024.12.3 11:49">
       <option name="closed" value="true" />
@@ -279,7 +261,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712053910726</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Merge remote-tracking branch 'origin/main'">
+      <option name="closed" value="true" />
+      <created>1712072556314</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1712072556314</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -322,7 +312,8 @@
     <MESSAGE value="2024.12.3 11:49" />
     <MESSAGE value="2024.23.3 23:49" />
     <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;Router/student_router.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;Router/student_router.py" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/main'" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/main'" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
