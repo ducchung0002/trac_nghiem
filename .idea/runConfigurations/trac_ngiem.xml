@@ -1,7 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="trac_ngiem" type="Python.FastAPI">
-    <option name="additionalOptions" value="--host 0.0.0.0 --port 4444" />
+    <option name="additionalOptions" value="--port 4444" />
     <option name="file" value="D:\OneDrive - The University of Technology\School\Semester_6\PBL5\backend\tracnghiem\main.py" />
+    <module name="tracnghiem" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
@@ -11,7 +12,6 @@
     <option name="IS_MODULE_SDK" value="false" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
-    <module name="" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="launchJavascriptDebuger" value="false" />
     <method v="2" />

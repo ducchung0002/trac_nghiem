@@ -1,5 +1,5 @@
 from . import get_database
-from Model import Student
+from Model.db_model import Student
 
 
 class student_DA:

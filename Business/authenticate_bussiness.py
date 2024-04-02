@@ -3,7 +3,7 @@ import fastapi
 from typing import Annotated
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
-from Model import Teacher, Student
+from Model.db_model import Teacher, Student
 from . import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, HASH_ALGORITHM, oauth2_scheme
 
 

@@ -1,5 +1,5 @@
 from . import get_database
-from Model import Teacher
+from Model.db_model import Teacher
 
 
 class teacher_DA:
@@ -21,5 +21,5 @@ class teacher_DA:
 
     def insert_teacher(self, email: str, hash_pswd: str, name: str):
         with get_database(True) as cursor:
-            cursor.execute("INSERT INTO [teacher]([email], [hash_pswd], [name])  VALUES (%s, %s, %s)", (email, hash_pswd, name))
-
+            cursor.execute("INSERT INTO [teacher]([email], [hash_pswd], [name])  VALUES (%s, %s, %s)",
+                           (email, hash_pswd, name))

@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 class Admin:
     def __init__(self, data: dict) -> None:
         self.id: str | None = data.get("id")

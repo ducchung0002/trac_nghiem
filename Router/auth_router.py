@@ -5,14 +5,14 @@ from starlette import status
 from Business.authenticate_bussiness import create_access_token
 from Business.teacher_business import teacher_bussiness
 from Business.student_business import student_bussiness
-from .response_model import Token
-from Model import Teacher, Student
+from Model.response_model import Res_Token
+from Model.db_model import Teacher, Student
 
 auth_router = APIRouter(prefix='/auth', tags=['auth'])
 
 
 @auth_router.post("/token")
-async def get_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], role: str) -> Token:
+async def get_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], role: str) -> Res_Token:
     if role == "teacher":
         teacher_service = teacher_bussiness()
         teacher: Teacher = teacher_service.authenticate(form_data.username, form_data.password)
@@ -25,7 +25,7 @@ async def get_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
 
         token = create_access_token({"id": teacher.id, "email": teacher.email, "role": role})
 
-        return Token(**{"access_token": token, "token_type": 'bearer'})
+        return Res_Token(**{"access_token": token, "token_type": 'bearer'})
 
     if role == "student":
         student_service = student_bussiness()
@@ -39,7 +39,7 @@ async def get_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
 
         token = create_access_token({"id": student.id, "email": student.email, "role": role})
 
-        return Token(**{"access_token": token, "token_type": 'bearer'})
+        return Res_Token(**{"access_token": token, "token_type": 'bearer'})
 
     if role == "admin":
         pass
